@@ -1,3 +1,4 @@
+
 import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -11,11 +12,8 @@ def build_model(target):
         ("tfidf", TfidfVectorizer()),
         ("classifier", MultinomialNB())
     ])
-
-    model.fit(
-        df["complaint"].astype(str),
-        df[target].astype(str)
-    )
+    model.fit(df["complaint"].astype(str),
+              df[target].astype(str))
     return model
 
 category_model = build_model("category")
@@ -24,8 +22,7 @@ priority_model = build_model("priority")
 def predict_complaint(complaint):
     if not complaint.strip():
         return "Please enter a complaint.", "Not predicted"
-
-    category = category_model.predict([complaint])[0]
-    priority = priority_model.predict([complaint])[0]
-
-    return category, priority
+    return (
+        category_model.predict([complaint])[0],
+        priority_model.predict([complaint])[0]
+    )
